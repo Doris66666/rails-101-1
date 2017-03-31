@@ -11,9 +11,7 @@ class GroupsController < ApplicationController
   end
 
   def edit
-    @group = Group.find(params[:id])
   end
-
 
   def new
     @group = Group.new
@@ -22,6 +20,7 @@ class GroupsController < ApplicationController
   def create
     @group = Group.new(group_params)
     @group.user = current_user
+
   if @group.save
       current_user.join!(@group)
       redirect_to groups_path
@@ -40,12 +39,14 @@ class GroupsController < ApplicationController
   end
 
   def destroy
+
   @group.destroy
-  redirect_to groups_path, alert: "Group deleted"
+  flash[:alert]  "Group deleted"
+  redirect_to groups_path
 end
 
   def join
-  @group = Group.find(params[:id])
+   @group = Group.find(params[:id])
 
    if !current_user.is_member_of?(@group)
      current_user.join!(@group)
